@@ -1,0 +1,10 @@
+- name: Create a PostgreSQL DB server
+  hosts: OASVM
+  become: true
+  become_user: azureuser
+  remote_user: azureuser
+  vars_files:
+    - roles/dbserver/vars/main.yml
+
+  roles:
+  - dbserver
