@@ -2,34 +2,31 @@
   hosts: localhost
   connection: local
   tasks:
- # - name: Create resource group
- #   azure_rm_resourcegroup:
- #     name: myResourceGroup
- #     location: eastus
+
   - name: Create virtual network
     azure_rm_virtualnetwork:
-      resource_group: <insert rg>
-      name: myVnet
-      address_prefixes: "10.0.0.0/24"
+      resource_group: Operating-Automation-Showcase
+      name: OASVnet
+      address_prefixes: "10.0.0.0/16"
   - name: Add subnet
     azure_rm_subnet:
-      resource_group: <insert rg>
-      name: mySubnet
+      resource_group: Operating-Automation-Showcase
+      name: OASSubnet
       address_prefix: "10.0.1.0/24"
-      virtual_network: myVnet
+      virtual_network: OASVnet
   - name: Create public IP address
     azure_rm_publicipaddress:
-      resource_group: <insert rg>
+      resource_group: Operating-Automation-Showcase
       allocation_method: Static
-      name: myPublicIP
+      name: OASPublicIP
     register: output_ip_address
   - name: Dump public IP for VM which will be created
     debug:
       msg: "The public IP is {{ output_ip_address.state.ip_address }}."
   - name: Create Network Security Group that allows SSH
     azure_rm_securitygroup:
-      resource_group: <insert rg>
-      name: myNetworkSecurityGroup
+      resource_group: Operating-Automation-Showcase
+      name: OASNetworkSecurityGroup
       rules:
         - name: SSH
           protocol: Tcp
@@ -39,25 +36,25 @@
           direction: Inbound
   - name: Create virtual network interface card
     azure_rm_networkinterface:
-      resource_group: <insert rg>
-      name: myNIC
-      virtual_network: myVnet
-      subnet: mySubnet
-      public_ip_name: myPublicIP
-      security_group: myNetworkSecurityGroup
+      resource_group: Operating-Automation-Showcase
+      name: OASIC
+      virtual_network: OASVnet
+      subnet: OASSubnet
+      public_ip_name: OASPublicIP
+      security_group: OASNetworkSecurityGroup
   - name: Create VM
     azure_rm_virtualmachine:
-      resource_group: <insert rg>
-      name: myVM
+      resource_group: Operating-Automation-Showcase
+      name: OASVM
       vm_size: Standard_DS1_v2
       admin_username: azureuser
       ssh_password_enabled: false
       ssh_public_keys:
         - path: /home/azureuser/.ssh/authorized_keys
-          key_data: <your-key-data>
+          key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDMi61p0s2jNLtYKTFnIkw/rRdaND6IIsHmH8P9XS/whN/koEHa16lKvJ049s5nH9xQJzJgkFsbzA0s0L+OMxRjw5ayanrnglpGr8P+num34tlRTNxpNtVYSq7p413Aj1uxvmOXsUOLDOtngMC7D9ZiwAYBN+Lt6fYDuw+ahK/RImQYCxwZX/i1nWeG9EfLpyJN1JkTNmmYKcb8DYNEAm0Z1a+g3a7VHiJLNt9yMzIXNUoqsfWCsWe4U95mUCUblm9HGF3G8EsZ2yjyx5M7MuyrSCB6nMEtFhcrfqobGBum00lIteI5pr8Xujy8SuA7ICSnKtVGd2qw7Zn7qLeTjnr7 jonas_bernsee@cc-2a1d14e3-744bcc67c8-tdbhz
       network_interfaces: myNIC
-      image:
-        offer: CentOS
-        publisher: OpenLogic
-        sku: '7.5'
+     image:
+        offer: UbuntuServer
+        publisher: Canonical
+        sku: 18.04-LTS
         version: latest
