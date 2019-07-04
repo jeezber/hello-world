@@ -1,8 +1,15 @@
 - name: Start Azure VM
-  hosts: localhost
-  connection: local
+  hosts: /home/jonas_bernsee/hosts
+  vars:
+  resource_group_name: Operating-Automation-System
+  vm_name: OASVM
   tasks:
     - name: Start virtual machine
       azure_rm_virtualmachine:
         resource_group: {{ resource_group_name }}
-        name: {{ vm_name }}
+        name: {{ vm_name }}{{ item }}
+        
+    loop:
+      - A
+      - B
+        
