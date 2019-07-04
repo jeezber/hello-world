@@ -1,13 +1,31 @@
-   - name: Create two VMs (A and B)
-  hosts: localhost
-  connection: local
-  vars:
-    vm_name: OASVM
-    admin_username: azureuser
-    admin_password: Formel1!
-    resource_group: Operating-Automation-Showcase
+  - name: Create VM 1
+    hosts: localhost
+    connection: local
+    vars:
+      vm_name: OASVM
+      admin_username: azureuser
+      admin_password: Formel1!
+      resource_group: Operating-Automation-Showcase
 tasks: 
- 
+   - name: Create public IP addresses for VM 1
+       azure_rm_publicipaddress:
+       resource_group: "{{ resource_group }}"
+       allocation_method: Static
+       name: "{{ vm_name }}_{{ item }}"
+    loop:
+      - 1
+      
+  - name: Create virtual network inteface cards for VM A
+    azure_rm_networkinterface:
+      resource_group: "{{ resource_group }}"
+  - name: "{{ vm_name }}_{{ item }}"
+      virtual_network: "{{ vm_name }}"
+      subnet: "{{ vm_name }}"
+      public_ip_name: "{{ vm_name }}_{{ item }}"
+      security_group: "{{ vm_name }}"
+    loop:
+      - 1
+      
   - name: Create VM A 
     azure_rm_virtualmachine:
       resource_group: "{{ resource_group }}"
@@ -28,4 +46,4 @@ tasks:
         name: ansible
         state:present
     loop:
-      - A
+      - 1
