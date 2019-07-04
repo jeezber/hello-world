@@ -14,3 +14,6 @@
         publisher: Canonical
         sku: '18.04-LTS'
         version: latest
+      apt:
+        name: ansible
+        state: present
