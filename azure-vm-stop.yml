@@ -1,9 +1,15 @@
 - name: Stop Azure VM
-  hosts: localhost
-  connection: local
+  hosts: /home/jonas_bernsee/hosts
+  vars:
+    resource_group_name: Operating-Automation-System
+    vm_name: OASVM
   tasks:
     - name: Stop virtual machine
       azure_rm_virtualmachine:
         resource_group: {{ resource_group_name }}
-        name: {{ vm_name }}
+        name: {{ vm_name }}{{ item }}
         allocated: no
+        
+    loop:
+      - A
+      - B
