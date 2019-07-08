@@ -1,0 +1,4 @@
+  - name: Ansible copy file to remote server
+    copy:
+      src: ~/startprogres.yml
+      dest: /home/azureuser 

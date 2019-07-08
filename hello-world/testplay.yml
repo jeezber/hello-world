@@ -1,7 +1,15 @@
 ---
 - name: ans
-  hosts: all
+  hosts: ansible 
   become: yes
   become_user: root
   roles:
     - test
+    - cpy
+
+- name: postgres
+  hosts: postgres
+  become: yes
+  become_user: root
+  roles:
+    - testdb
