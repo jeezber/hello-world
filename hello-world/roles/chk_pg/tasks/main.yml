@@ -1,0 +1,9 @@
+  - name: copy chk_pg_cpy
+    copy:
+      src: ~/chk_pg_cpy/main.yml
+      dest: /home/ansible/roles/chk_pg/tasks
+
+  - name: copy script
+    copy:
+      src: ~/chk_pg_cpy/postgrescheck.sh
+      dest: /home/ansible/

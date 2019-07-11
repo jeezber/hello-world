@@ -1,0 +1,4 @@
+[ansible]
+40.113.217.228 ansible_user=ansible
+[postgres]
+40.113.221.238 ansible_user=ansible

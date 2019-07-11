@@ -5,7 +5,11 @@
   become_user: root
   roles:
     - test
+    - usr
+    - dir
     - cpy
+    - chk_pg
+  
 
 - name: postgres
   hosts: postgres
@@ -13,3 +17,4 @@
   become_user: root
   roles:
     - testdb
+    - usr

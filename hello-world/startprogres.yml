@@ -4,7 +4,6 @@
   become: true
   become_user: postgres
   gather_facts: yes
-
   vars:
     dbname: module_test
     dbuser: postgres

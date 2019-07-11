@@ -1,4 +1,14 @@
   - name: Ansible copy file to remote server
     copy:
       src: ~/startprogres.yml
-      dest: /home/azureuser 
+      dest: /home/ansible
+ 
+  - name: Copy host file
+    template:
+      src: ~/host/hosts.j2
+      dest: /etc/ansible/hosts
+
+  - name: Ansible copy file to remote server
+    copy:
+      src: ~/chk_pg_cpy/chk_pg.yml
+      dest: /home/ansible

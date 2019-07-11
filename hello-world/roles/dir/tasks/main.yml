@@ -1,0 +1,14 @@
+- name: Creates directory
+  file:
+    path: /home/ansible/roles
+    state: directory
+
+- name: Creates directory
+  file:
+    path: /home/ansible/roles/chk_pg
+    state: directory
+
+- name: Creates directory
+  file:
+    path: /home/ansible/roles/chk_pg/tasks
+    state: directory

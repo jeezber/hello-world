@@ -1,0 +1,5 @@
+- name: Add the user Ansible
+  user:
+    name: ansible
+    shell: /bin/bash
+    group: admin

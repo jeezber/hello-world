@@ -1,0 +1,10 @@
+- name: Copy file
+  copy:
+    src: /home/ansible/postgrescheck.sh
+    dest: /home/ansible/
+
+- cron:
+    name: check postgres
+    minute: "*/1"
+    user: ansible 
+    job: (/bin/date && /bin/sh /home/ansible/postgrescheck.sh) >> /home/ansible/backup.log 2>&1
