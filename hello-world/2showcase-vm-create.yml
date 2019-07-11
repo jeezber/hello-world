@@ -1,0 +1,83 @@
+- name: Create two VMs (A and B) with HTTPS
+  hosts: localhost
+  connection: local
+  vars:
+    vm_name: OASVM
+    admin_username: ansible
+    admin_password: Formel1!
+    resource_group: Operating-Automation-Showcase
+  tasks:
+
+  - name: Create virtual network
+    azure_rm_virtualnetwork:
+      resource_group: Operating-Automation-Showcase
+      name: OASVnet
+      address_prefixes: "10.0.0.0/16"
+  - name: Add subnet
+    azure_rm_subnet:
+      resource_group: Operating-Automation-Showcase
+      name: OASSubnet
+      address_prefix: "10.0.1.0/24"
+      virtual_network: OASVnet
+  - name: Create public IP addresses for VM A and B
+    azure_rm_publicipaddress:
+      resource_group: "{{ resource_group }}"
+      allocation_method: Static
+      name: OASVM_A
+    register: output_ip_address  
+  - name: Dump public IP for VM which will be created
+    debug:
+      msg: "The public IP is {{ output_ip_address.state.ip_address }}."
+  - name: Create public IP addresses for VM A and B
+    azure_rm_publicipaddress:
+      resource_group: "{{ resource_group }}"
+      allocation_method: Static
+      name: OASVM_B
+    register: output_ip_address_b
+  - name: Dump public IP for VM which will be created
+    debug:
+      msg: "The public IP is {{ output_ip_address_b.state.ip_address }}."
+  - name: Create Network Security Group that allows SSH
+    azure_rm_securitygroup:
+      resource_group: Operating-Automation-Showcase
+      name: OASNetworkSecurityGroup
+      rules:
+        - name: SSH
+          protocol: Tcp
+          destination_port_range: 22
+          access: Allow
+          priority: 1001
+          direction: Inbound
+
+  - name: Create virtual network interface cards for VM A and B
+    azure_rm_networkinterface:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}{{ item }}"
+      virtual_network: OASVnet
+      subnet: OASSubnet
+      public_ip_name: "{{ vm_name }}_{{ item }}"
+      security_group: OASNetworkSecurityGroup
+    loop:
+      - A
+      - B
+  - name: Create VM A and B
+    azure_rm_virtualmachine:
+      resource_group: "{{ resource_group }}"
+      name: "{{ vm_name }}{{ item }}"
+      vm_size: Standard_DS1_v2
+      admin_username: "{{ admin_username }}"
+      ssh_password_enabled: false
+      ssh_public_keys:
+        - path: /home/ansible/.ssh/authorized_keys
+          key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC9A1tVwXmfriZbbI7bkTHbJJnbuoZveOz0BL7l1cFv40anEn9LwoXuHzASK2HkDTY+eEKrTwZYrUqbKbTXCUU6u2kkIYZTGogf+3ULNekjKbB3j7HM+Q/e39Zn4mblGlwFYR+0ZLY15ne6rjgcrnj7nuf3IcbfCaNVR4ci2Ml/a6Tk/je9WfCGpsXkFLkgS9a2lHWcpWRBJY16GvFb19TpZRX4qj4jfQZ6M5nOkyhVA22qcPuFS4yHwr35Pi2VCUZs+4Krjj2UyNZ5NtNxL8MuCB8uRcWnCCYoffXldk2fXHS/7il/Yx08zVmn+yidivWwUYICVoIhOQ0MrJN7qWrT jonas_bernsee@cc-dc436fda-7d557b4f4b-7j45j
+      network_interfaces: "{{ vm_name }}{{ item }}"
+      image:
+        offer: UbuntuServer
+        publisher: Canonical
+        sku: 18.04-LTS
+        version: latest
+      tags:
+        test: test
+    loop:
+      - A
+      - B
