@@ -1,0 +1,4 @@
+- name: Install ansible
+  apt: name={{ item }} update_cache=true state=present
+  with_items:
+    - ansible

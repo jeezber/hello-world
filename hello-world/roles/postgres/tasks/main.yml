@@ -1,0 +1,7 @@
+- name: Install postgresql
+  apt: name={{ item }} update_cache=true state=present
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - libpq-dev
+    - python-psycopg2

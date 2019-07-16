@@ -4,11 +4,11 @@
   become: yes
   become_user: root
   roles:
-    - test
     - usr
     - dir
-    - cpy
+    - ansible
     - chk_pg
+    - cpy
   
 
 - name: postgres
@@ -16,5 +16,5 @@
   become: yes
   become_user: root
   roles:
-    - testdb
+    - postgres
     - usr
