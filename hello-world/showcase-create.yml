@@ -76,8 +76,7 @@
         publisher: Canonical
         sku: 18.04-LTS
         version: latest
-      tags:
-        test: test
+
     loop:
       - A
       - B
