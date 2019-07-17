@@ -9,6 +9,10 @@
     dbuser: postgres
 
   tasks:
+  - service:
+      name: postgres
+      state: started
+      
   - name: ensure the database is present
     postgresql_db: >
       state=present
